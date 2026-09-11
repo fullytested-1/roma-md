@@ -1,189 +1,135 @@
-# 🌌 ROMA MD
+<div align="center">
+
+<img src="https://i.ibb.co/FkYcVmw5/temp.jpg" width="100%" alt="ROMA MD">
+
+# ⚡ 𝐑𝐎𝐌𝐀 𝐌𝐃 ⚡
+
+<i>The Ultimate WhatsApp Multi-Device Bot Experience</i>
+
+<b>Fast • Stable • Powerful • Premium</b>
+
+<br>
 
 <p align="center">
-  <b>ROMA MD — Session-ID-only WhatsApp Bot</b><br>
-  Fast download tools, lyrics, AI chat and AI image generation.
+  <a href="https://github.com/fullytested-1/roma-md/stargazers"><img src="https://img.shields.io/github/stars/fullytested-1/roma-md?style=for-the-badge&logo=github&color=FFD700" alt="Stars"></a>
+  <a href="https://github.com/fullytested-1/roma-md/network/members"><img src="https://img.shields.io/github/forks/fullytested-1/roma-md?style=for-the-badge&logo=github&color=00BFFF" alt="Forks"></a>
+  <a href="https://github.com/fullytested-1/roma-md/blob/main/LICENSE"><img src="https://img.shields.io/github/license/fullytested-1/roma-md?style=for-the-badge&color=00FF00" alt="License"></a>
 </p>
 
-<p align="center">
+---
 
-[![Open Session Web](https://img.shields.io/badge/🔗%20Session%20Web-Medium-blue?style=for-the-badge)](https://modest-sacha-boyscro-50785a59.koyeb.app/)
+## 👑 𝐑𝐎𝐌𝐀 𝐌𝐃
 
-</p>
+<i>A session-ID-only WhatsApp bot built for fast deployment and easy use.</i>
 
-## 🔐 Connection
+</div>
 
-ROMA MD is designed around **Session ID only**.
+---
 
-You only need:
+## 🚀 𝐎𝐍𝐄 𝐂𝐋𝐈𝐂𝐊 𝐃𝐄𝐏𝐋𝐎𝐘
 
-~~~env
-SESSION_ID=ROMA~YOUR_SESSION_ID
-~~~
+<table align="center">
+  <tr>
+    <td align="center"><a href="https://railway.app"><img src="https://img.shields.io/badge/🚂_Deploy_on_Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white"></a></td>
+    <td align="center"><a href="https://render.com"><img src="https://img.shields.io/badge/⚡_Deploy_on_Render-46E3B7?style=for-the-badge&logo=render&logoColor=black"></a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://app.koyeb.com"><img src="https://img.shields.io/badge/☁️_Deploy_on_Koyeb-121212?style=for-the-badge"></a></td>
+    <td align="center"><a href="https://github.com/fullytested-1/roma-md"><img src="https://img.shields.io/badge/🖥️_VPS_Host-7B68EE?style=for-the-badge&logo=linux&logoColor=white"></a></td>
+  </tr>
+</table>
 
-The session ID must start with `ROMA~`. The Pair/QR web handles the WhatsApp connection and session state.
+---
 
-> **Session Web:** [Open ROMA Session Web](https://modest-sacha-boyscro-50785a59.koyeb.app/)
+## 🔑 𝐇𝐎𝐖 𝐓𝐎 𝐂𝐎𝐍𝐍𝐄𝐂𝐓 (𝐒𝐄𝐒𝐒𝐈𝐎𝐍 𝐈𝐃)
 
-No MongoDB URI, connection key, Baileys auth files, or separate connection URI is required by the bot.
+<i>No BOT_NUMBER, pairing code or connection URI is required. ROMA MD uses Session ID only.</i>
 
-## ✨ Features
+<div align="center">
 
-- 📥 Facebook video downloader with fallback APIs
-- 🐦 X/Twitter video downloader with fallback APIs
-- 🎵 Lyrics search
-- 🤖 AI chat
-- 🎨 AI image generation
-- 🏓 Ping / alive / runtime commands
-- 🪪 ROMA~ session validation
-- 🐳 Docker support
-- ☁️ Koyeb / Render / Railway deployment
-- 🖥️ VPS deployment with Docker Compose
+<a href="https://modest-sacha-boyscro-50785a59.koyeb.app/"><img src="https://img.shields.io/badge/🔑_GET_SESSION_ID-Medium-00BFFF?style=for-the-badge"></a>
 
-## 📦 Commands
+</div>
 
-| Command | Usage |
-|---|---|
-| `.ping` | Check bot response |
-| `.alive` | Bot status |
-| `.menu` | Show commands |
-| `.runtime` | Show uptime |
-| `.owner` | Show owner |
-| `.fb <url>` | Download Facebook video |
-| `.twitter <url>` | Download X/Twitter video |
-| `.lyrics <song>` | Search lyrics |
-| `.ai <question>` | AI chat |
-| `.imagine <prompt>` | Generate an AI image |
+1. **Open Session Web:** Click the button above.
+2. **Pair / Scan:** Complete the WhatsApp connection on the Session Web.
+3. **Copy Session ID:** Copy the generated `ROMA~...` Session ID.
+4. **Deploy ROMA MD:** Deploy this repository on Koyeb, Render, Railway or your VPS.
+5. **Set Environment Variable:** Add only `SESSION_ID=ROMA~YOUR_SESSION_ID`.
+6. **Start the Bot:** Start/redeploy the service.
+7. **Done!** ROMA MD connects using the Session ID.
 
-## 🚀 Deploy
+> ⚠️ Keep your Session ID private. Never publish it in GitHub, screenshots or public groups.
 
-### ☁️ Koyeb
+---
 
-<p align="center">
+## 🔥 𝐅𝐄𝐀𝐓𝐔𝐑𝐄𝐒
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&builder=docker&repository=github.com/fullytested-1/roma-md&branch=main&name=roma-md)
+<details><summary><b>🤖 Artificial Intelligence</b></summary><br>
+* 🧠 AI Chat
+* 🎨 AI Image Generation
+* 💬 Smart Question Answering
+</details>
 
-</p>
+<details><summary><b>📥 Downloaders</b></summary><br>
+* 📘 Facebook Video Downloader
+* 🐦 X / Twitter Video Downloader
+* 🎵 Lyrics Downloader / Search
+</details>
 
-Create the service and set only the required `SESSION_ID` environment variable.
+<details><summary><b>🛠️ Bot Utilities</b></summary><br>
+* 🏓 Ping
+* ❤️ Alive
+* 📋 Menu
+* ⏱️ Runtime
+* 👑 Owner
+* 🔐 Session ID validation
+</details>
 
-### 🚀 Render
+---
 
-This repository includes `render.yaml` for a Background Worker deployment.
+<div align="center">
+## 📦 𝐈𝐍𝐒𝐓𝐀𝐋𝐋𝐀𝐓𝐈𝐎𝐍
+</div>
 
-<p align="center">
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/fullytested-1/roma-md)
-
-</p>
-
-Set `SESSION_ID` when Render asks for the environment variable.
-
-### 🚂 Railway
-
-Railway can deploy this repository directly from GitHub and will detect the included Dockerfile.
-
-<p align="center">
-
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new)
-
-</p>
-
-1. Open Railway.
-2. Choose **Deploy from GitHub repo**.
-3. Select `fullytested-1/roma-md`.
-4. Add `SESSION_ID=ROMA~YOUR_SESSION_ID`.
-5. Deploy.
-
-## 🖥️ VPS Host
-
-The repository includes `docker-compose.yml` for VPS deployment.
-
-### 1. Install Docker
-
-Install Docker and Docker Compose on your VPS.
-
-### 2. Clone
-
-~~~bash
+```bash
 git clone https://github.com/fullytested-1/roma-md.git
 cd roma-md
-~~~
+npm install
+npm start
+```
 
-### 3. Create `.env`
+---
 
-~~~env
-SESSION_ID=ROMA~YOUR_SESSION_ID
-OWNER_NUMBER=91XXXXXXXXXX
-PREFIX=.
-BOT_NAME=ROMA MD
-LOG_LEVEL=silent
-~~~
+## 🖥️ 𝐕𝐏𝐒 𝐃𝐄𝐏𝐋𝐎𝐘𝐌𝐄𝐍𝐓
 
-### 4. Start
-
-~~~bash
+```bash
+git clone https://github.com/fullytested-1/roma-md.git
+cd roma-md
+cp .env.example .env
+nano .env
 docker compose up -d --build
-~~~
-
-### 5. View logs
-
-~~~bash
 docker compose logs -f roma-md
-~~~
+```
 
-### 6. Update
+```env
+SESSION_ID=ROMA~YOUR_SESSION_ID
+BOT_NAME=ROMA MD
+PREFIX=.
+```
 
-~~~bash
-git pull
-docker compose up -d --build
-~~~
+## 🌐 𝐀𝐏𝐈 𝐅𝐄𝐀𝐓𝐔𝐑𝐄𝐒
 
-The Compose service uses `restart: unless-stopped`, so the bot comes back after a VPS reboot.
+| Feature | API |
+|---|---|
+| 🐦 Twitter Downloader | JerryCoder + NexRay |
+| 🎵 Lyrics | JerryCoder |
+| 🤖 AI Chat | JerryCoder |
+| 🎨 AI Image | JerryCoder |
 
-## 🔒 Security
-
-- Never post your **ROMA~ session ID** publicly.
-- Do not put session IDs directly into Git commits.
-- Use platform environment variables or the VPS `.env` file.
-- If a session is disconnected/revoked, generate a new session and replace the old value.
-
-## 🧩 API Fallbacks
-
-### Facebook
-1. JerryCoder
-2. NexRay
-3. EliteProTech
-
-### X/Twitter
-1. NexRay
-2. JerryCoder
-
-### Lyrics
-- JerryCoder
-
-### AI Chat
-- JerryCoder
-
-### AI Image
-- JerryCoder
-
-## 📁 Project
-
-~~~text
-roma-md/
-├── src/
-│   └── index.js
-├── Dockerfile
-├── docker-compose.yml
-├── render.yaml
-├── package.json
-├── .env.example
-└── README.md
-~~~
-
-## 💙 ROMA MD
-
-**Bot Name:** ROMA MD  
-**Session format:** `ROMA~...`  
-**Connection:** Session ID only
+<div align="center">
+## 💙 𝐑𝐎𝐌𝐀 𝐌𝐃
+<b>Session format: ROMA~...</b><br>
+<b>Connection: Session ID only</b><br>
+<b>Bot Name: ROMA MD</b>
+</div>
