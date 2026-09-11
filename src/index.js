@@ -84,7 +84,7 @@ const START_MESSAGE=`*_Roma!_*
 
 _Mode         :_ *${MODE[0].toUpperCase()+MODE.slice(1)}*
 _Language :_ *English*
-_Sudo_         _: *${OWNER ? "+"+OWNER : "Not configured"}*
+_Sudo_         _: *${OWNER ? "+"+OWNER : ""}*
 _Handlers_  _: *${PREFIX},*
 
 ╭─〔 ROMA MD 〕─╮
@@ -94,10 +94,11 @@ _Handlers_  _: *${PREFIX},*
 ╰──────────────╯`;
 
 async function sendStartingMessage(){
-  if(!OWNER)return;
   try{
-    await send(OWNER+"@s.whatsapp.net",START_MESSAGE);
-    console.log("[ROMA] Starting message sent to owner");
+    const target=OWNER ? OWNER+"@s.whatsapp.net" : (process.env.BOT_NUMBER||"").replace(/\D/g,"")+"@s.whatsapp.net";
+    if(!target || target==="@s.whatsapp.net") return;
+    await send(target,START_MESSAGE);
+    console.log("[ROMA] Starting message sent");
   }catch(e){
     log.error({err:e},"starting message failed");
   }
