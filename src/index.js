@@ -1,7 +1,8 @@
 import "dotenv/config";
 import P from "pino";
 
-const SESSION_ID=process.env.SESSION_ID||"";
+const SESSION_RAW=process.env.SESSION_ID||"";
+const SESSION_ID=(SESSION_RAW.match(/ROMA~[A-Za-z0-9_-]{8,}/)||[""])[0];
 const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"https://modest-sacha-boyscro-50785a59.koyeb.app").replace(/\/$/,"");
 const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
