@@ -1,24 +1,28 @@
-# ROMA-MD
+# ROMA MD WhatsApp Bot
 
-## API fallback module
+This is the separate bot service for the ROMA Pairing Web.
 
-Configured providers:
+Flow: Pair/QR Web -> ROMA~ Session ID -> this bot -> WhatsApp commands -> APIs.
 
-- Facebook downloader: JerryCoder → NexRay → EliteProTech
-- Twitter/X downloader: JerryCoder → NexRay
+The bot reads the encrypted Baileys auth state from the same MongoDB used by Pair-web. Pair-web remains the credential writer.
+
+Fallback order:
+- Facebook: JerryCoder -> NexRay -> EliteProTech
+- Twitter/X: NexRay -> JerryCoder
 - Lyrics: JerryCoder
-- AI Chat: JerryCoder
-- AI Image: JerryCoder
+- AI chat: JerryCoder
+- AI image: JerryCoder
 
-The module is at `src/api.js`. Each request automatically tries the next provider when the previous provider fails or returns an invalid response.
+Commands:
+.ping
+.menu
+.alive
+.runtime
+.owner
+.fb <url>
+.twitter <url>
+.lyrics <song>
+.ai <question>
+.imagine <prompt>
 
-Inputs are URL-encoded before being sent to providers.
-
-Example:
-
-```js
-import { api } from "./api.js";
-
-const result = await api.facebook("https://www.facebook.com/reel/...");
-if (result.ok) console.log(result.data);
-```
+Set the same MONGODB_URI and SESSION_ENCRYPTION_KEY as Pair-web and set SESSION_ID to the generated ROMA~ value. Never commit .env or secrets.
