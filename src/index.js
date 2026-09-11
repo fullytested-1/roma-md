@@ -1,90 +1,79 @@
-import mongoose from "mongoose";
-import makeWASocket,{DisconnectReason} from "@whiskeysockets/baileys";
+import "dotenv/config";
 import P from "pino";
-import crypto from "node:crypto";
-import {config} from "./config.js";
-import {createAuthState} from "./auth.js";
-import {api} from "./api.js";
-import {menuText} from "./commands.js";
 
+const SESSION_ID=process.env.SESSION_ID||"";
+const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"").replace(/\/$/,"");
+const PREFIX=process.env.PREFIX||".";
+const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
+const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
+const log=P({level:process.env.LOG_LEVEL||"silent"});
+if(!SESSION_ID.startsWith("ROMA~")) throw new Error("SESSION_ID must start with ROMA~");
+if(!PAIR_WEB_URL) throw new Error("PAIR_WEB_URL is required (your deployed Pair-web URL)");
+
+const J="https://jerrycoder.oggyapi.workers.dev",N="https://api.nexray.eu.cc",E="https://eliteprotech-apis.zone.id";
 const started=Date.now();
 const runtime=()=>{let s=Math.floor((Date.now()-started)/1000),h=Math.floor(s/3600);s%=3600;let m=Math.floor(s/60);return h+"h "+m+"m "+(s%60)+"s"};
-const textOf=m=>m?.conversation||m?.extendedTextMessage?.text||m?.imageMessage?.caption||m?.videoMessage?.caption||"";
-const urlOf=s=>(s.match(/https?:\\/\\/[^\\s]+/i)||[])[0];
+async function req(url,opts={}){const c=new AbortController(),t=setTimeout(()=>c.abort(),20000);try{const r=await fetch(url,{...opts,signal:c.signal,headers:{"content-type":"application/json",accept:"application/json",...(opts.headers||{})}});if(!r.ok)throw new Error("HTTP "+r.status);return await r.json()}finally{clearTimeout(t)}}
+async function api(urls,valid){for(const u of urls){try{const d=await req(u);if(valid(d))return d}catch{}}return null}
+async function send(to,text){return req(PAIR_WEB_URL+"/api/bot/send/"+encodeURIComponent(SESSION_ID),{method:"POST",body:JSON.stringify({to,text})})}
+async function sendVideo(to,url,caption){return req(PAIR_WEB_URL+"/api/bot/send-video/"+encodeURIComponent(SESSION_ID),{method:"POST",body:JSON.stringify({to,url,caption})})}
+async function sendImage(to,url,caption){return req(PAIR_WEB_URL+"/api/bot/send-image/"+encodeURIComponent(SESSION_ID),{method:"POST",body:JSON.stringify({to,url,caption})})}
+const textOf=m=>m?.text||"";
+const urlOf=s=>(s.match(/https?:\/\/[^\s]+/i)||[])[0];
 
-async function handle(sock,msg){
- const jid=msg.key.remoteJid,raw=textOf(msg).trim();
- if(!raw.startsWith(config.prefix))return;
- const a=raw.slice(config.prefix.length).trim().split(/\\s+/),cmd=(a.shift()||"").toLowerCase(),arg=a.join(" ");
- if(cmd==="ping")return sock.sendMessage(jid,{text:"🏓 Pong!\\n⏱️ "+runtime()});
- if(cmd==="alive"||cmd==="status")return sock.sendMessage(jid,{text:"🤖 "+config.botName+"\\n🟢 Online\\n⏱️ "+runtime()});
- if(cmd==="runtime")return sock.sendMessage(jid,{text:"⏱️ "+runtime()});
- if(cmd==="owner")return sock.sendMessage(jid,{text:config.owner?"👑 Owner: +"+config.owner:"Owner not configured."});
- if(cmd==="menu"||cmd==="help")return sock.sendMessage(jid,{text:menuText(config.prefix)});
-
+async function handle(m){
+ const raw=textOf(m).trim(),to=m.from;if(!raw.startsWith(PREFIX))return;
+ const a=raw.slice(PREFIX.length).trim().split(/\s+/),cmd=(a.shift()||"").toLowerCase(),arg=a.join(" ");
+ if(cmd==="ping")return send(to,"🏓 Pong!\\n⏱️ "+runtime());
+ if(cmd==="alive"||cmd==="status")return send(to,"🤖 "+BOT_NAME+"\\n🟢 Online\\n⏱️ "+runtime());
+ if(cmd==="runtime")return send(to,"⏱️ "+runtime());
+ if(cmd==="owner")return send(to,OWNER?"👑 Owner: +"+OWNER:"Owner not configured.");
+ if(cmd==="menu"||cmd==="help")return send(to,"╭──〔 🤖 "+BOT_NAME+" 〕──╮\\n│ GENERAL\\n│ • "+PREFIX+"ping\\n│ • "+PREFIX+"alive\\n│ • "+PREFIX+"menu\\n│ • "+PREFIX+"runtime\\n│ • "+PREFIX+"owner\\n│\\n│ DOWNLOAD\\n│ • "+PREFIX+"fb <facebook url>\\n│ • "+PREFIX+"twitter <x/twitter url>\\n│ • "+PREFIX+"lyrics <song name>\\n│\\n│ AI\\n│ • "+PREFIX+"ai <question>\\n│ • "+PREFIX+"imagine <prompt>\\n╰──────────────────╯");
  if(cmd==="fb"||cmd==="facebook"){
-  const u=urlOf(arg)||arg;if(!u)return sock.sendMessage(jid,{text:"Usage: "+config.prefix+"fb <Facebook URL>"});
-  await sock.sendMessage(jid,{text:"⏳ Downloading Facebook video..."});
-  const r=await api.facebook(u);if(!r.ok)return sock.sendMessage(jid,{text:"❌ Facebook downloader failed."});
-  const d=r.data,items=[];
-  if(Array.isArray(d.results))for(const x of d.results)if(x.url&&x.url!=="/")items.push(x);
-  if(d.result?.video_hd)items.unshift({quality:"HD",url:d.result.video_hd});
-  if(d.result?.video_sd)items.push({quality:"SD",url:d.result.video_sd});
-  if(Array.isArray(d.result?.medias))items.push(...d.result.medias);
-  const pick=items.find(x=>/1440|1080|720/i.test(x.quality||""))||items.find(x=>x.url);
-  if(!pick)return sock.sendMessage(jid,{text:"❌ No downloadable video found."});
-  return sock.sendMessage(jid,{video:{url:pick.url},caption:"📥 Facebook • "+(pick.quality||"Video")});
+  const u=urlOf(arg)||arg;if(!u)return send(to,"Usage: "+PREFIX+"fb <Facebook URL>");
+  await send(to,"⏳ Downloading Facebook video...");
+  const d=await api([J+"/down/fb?url="+encodeURIComponent(u),N+"/downloader/facebook?url="+encodeURIComponent(u),E+"/facebook1?url="+encodeURIComponent(u)],x=>x?.status==="success"||x?.status===true||x?.success===true);
+  if(!d)return send(to,"❌ Facebook downloader failed.");
+  const items=[]; if(Array.isArray(d.results))items.push(...d.results); if(d.result?.video_hd)items.unshift({quality:"HD",url:d.result.video_hd}); if(d.result?.video_sd)items.push({quality:"SD",url:d.result.video_sd}); if(Array.isArray(d.result?.medias))items.push(...d.result.medias);
+  const p=items.find(x=>x.url&&/1440|1080|720/i.test(x.quality||""))||items.find(x=>x.url&&x.url!="/");
+  return p?sendVideo(to,p.url,"📥 Facebook • "+(p.quality||"Video")):send(to,"❌ No downloadable video found.");
  }
-
  if(cmd==="twitter"||cmd==="x"){
-  const u=urlOf(arg)||arg;if(!u)return sock.sendMessage(jid,{text:"Usage: "+config.prefix+"twitter <X URL>"});
-  await sock.sendMessage(jid,{text:"⏳ Downloading X video..."});
-  const r=await api.twitter(u);if(!r.ok)return sock.sendMessage(jid,{text:"❌ Twitter/X downloader failed."});
-  const d=r.data,items=[];
-  if(Array.isArray(d.result?.download_url))items.push(...d.result.download_url);
-  if(Array.isArray(d.result?.medias))items.push(...d.result.medias);
-  if(d.result?.video_hd)items.unshift({name:"HD",url:d.result.video_hd});
-  if(d.result?.video_sd)items.push({name:"SD",url:d.result.video_sd});
-  const pick=items.find(x=>x.url&&/1280|1080|720/i.test((x.name||x.quality||"")+""))||items.find(x=>x.url);
-  if(!pick)return sock.sendMessage(jid,{text:"❌ No downloadable media found."});
-  return sock.sendMessage(jid,{video:{url:pick.url},caption:"📥 X/Twitter • "+(pick.name||pick.quality||"Video")});
+  const u=urlOf(arg)||arg;if(!u)return send(to,"Usage: "+PREFIX+"twitter <X URL>");
+  await send(to,"⏳ Downloading X video...");
+  const d=await api([N+"/downloader/twitter?url="+encodeURIComponent(u),J+"/down/twitter?url="+encodeURIComponent(u)],x=>x?.status==="success"||x?.status===true);
+  if(!d)return send(to,"❌ Twitter/X downloader failed.");
+  const items=[...(d.result?.download_url||[]),...(d.result?.medias||[])]; const p=items.find(x=>x.url&&/1280|1080|720/i.test((x.name||x.quality||"")) )||items.find(x=>x.url);
+  return p?sendVideo(to,p.url,"📥 X/Twitter • "+(p.name||p.quality||"Video")):send(to,"❌ No downloadable video found.");
  }
-
  if(cmd==="lyrics"||cmd==="lyric"){
-  if(!arg)return sock.sendMessage(jid,{text:"Usage: "+config.prefix+"lyrics <song name>"});
-  const r=await api.lyrics(arg),x=r.data?.result,l=x?.lyrics;if(!r.ok||!l)return sock.sendMessage(jid,{text:"❌ Lyrics not found."});
-  const body=l.plain_lyrics||l.synced_lyrics||"";
-  return sock.sendMessage(jid,{text:"🎵 *"+(x.title||l.name||arg)+"*\\n👤 "+(x.artist||l.artist_name||"")+"\\n\\n"+body.slice(0,60000)});
+  if(!arg)return send(to,"Usage: "+PREFIX+"lyrics <song name>");
+  const d=await api([J+"/search/lyrics-v1?q="+encodeURIComponent(arg)],x=>x?.status==="success"),x=d?.result,l=x?.lyrics;
+  if(!l)return send(to,"❌ Lyrics not found.");
+  return send(to,"🎵 *"+(x.title||l.name||arg)+"*\\n👤 "+(x.artist||l.artist_name||"")+"\\n\\n"+(l.plain_lyrics||l.synced_lyrics||"").slice(0,60000));
  }
-
  if(cmd==="ai"||cmd==="chat"){
-  if(!arg)return sock.sendMessage(jid,{text:"Usage: "+config.prefix+"ai <question>"});
-  const r=await api.ai(arg);return sock.sendMessage(jid,{text:r.ok?"🤖 "+r.data.reply:"❌ AI unavailable right now."});
+  if(!arg)return send(to,"Usage: "+PREFIX+"ai <question>");
+  const d=await api([J+"/ai/gpt?q="+encodeURIComponent(arg)],x=>typeof x?.reply==="string");
+  return send(to,d?"🤖 "+d.reply:"❌ AI unavailable right now.");
  }
  if(cmd==="imagine"||cmd==="imageai"){
-  if(!arg)return sock.sendMessage(jid,{text:"Usage: "+config.prefix+"imagine <prompt>"});
-  const r=await api.image(arg);if(!r.ok)return sock.sendMessage(jid,{text:"❌ Image generation failed."});
-  return sock.sendMessage(jid,{image:{url:r.data.image},caption:"🎨 "+arg});
+  if(!arg)return send(to,"Usage: "+PREFIX+"imagine <prompt>");
+  const d=await api([J+"/ai/poll?prompt="+encodeURIComponent(arg)],x=>x?.status==="success"&&typeof x?.image==="string");
+  return d?sendImage(to,d.image,"🎨 "+arg):send(to,"❌ Image generation failed.");
  }
- return sock.sendMessage(jid,{text:"❓ Unknown command. Type "+config.prefix+"menu"});
+ return send(to,"❓ Unknown command. Type "+PREFIX+"menu");
 }
 
-async function start(){
- await mongoose.connect(config.mongoUri);
- const {state}=await createAuthState();
- if(!state.creds.registered)throw new Error("Session is not paired. Pair it first in Pair-web.");
- const sock=makeWASocket({auth:state,logger:P({level:config.logLevel}),browser:["ROMA MD","Chrome","1.0.0"],markOnlineOnConnect:false,syncFullHistory:false});
- sock.ev.on("connection.update",u=>{
-  if(u.connection==="open")console.log("[ROMA] Connected: "+config.sessionId);
-  if(u.connection==="close"){
-   const code=u.lastDisconnect?.error?.output?.statusCode;
-   if(code===DisconnectReason.loggedOut){console.error("[ROMA] Logged out. Re-pair in Pair-web.");process.exit(1)}
-   console.log("[ROMA] Disconnected; reconnecting...");
-   setTimeout(()=>start().catch(e=>{console.error(e);process.exit(1)}),3000);
-  }
- });
- sock.ev.on("messages.upsert",async ev=>{
-  for(const msg of ev.messages||[]){if(!msg?.message||msg.key.fromMe)continue;try{await handle(sock,msg)}catch(e){console.error(e);await sock.sendMessage(msg.key.remoteJid,{text:"❌ Error: "+(e.message||"Request failed")}).catch(()=>{})}}
- });
+let cursor=0, busy=false;
+async function poll(){
+ if(busy)return; busy=true;
+ try{
+  const d=await req(PAIR_WEB_URL+"/api/bot/messages/"+encodeURIComponent(SESSION_ID)+"?after="+cursor);
+  if(!d.success)throw new Error(d.error||"Pair-web rejected session");
+  for(const m of d.messages||[]){cursor=Math.max(cursor,Number(m.cursor)||cursor);try{await handle(m)}catch(e){log.error({err:e},"command failed")}}
+ }catch(e){log.error({err:e},"poll failed")}
+ finally{busy=false}
 }
-start().catch(e=>{console.error("[ROMA] Fatal:",e);process.exit(1)});
+console.log("[ROMA] Bot started with session "+SESSION_ID);
+setInterval(poll,2000);poll();
