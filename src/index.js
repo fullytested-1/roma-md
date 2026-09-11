@@ -6,6 +6,7 @@ const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"https://modest-sacha-boyscro-5078
 const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
 const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
+const MODE=(process.env.MODE||"private").toLowerCase()==="public"?"public":"private";
 const log=P({level:process.env.LOG_LEVEL||"silent"});
 if(!/^ROMA~[A-Za-z0-9_-]{8,}$/.test(SESSION_ID)) throw new Error("Invalid ROMA session ID");
 
@@ -22,7 +23,10 @@ const textOf=m=>m?.text||"";
 const urlOf=s=>(s.match(/https?:\/\/[^\s]+/i)||[])[0];
 
 async function handle(m){
- const raw=textOf(m).trim(),to=m.from;if(!raw.startsWith(PREFIX))return;
+ const raw=textOf(m).trim(),to=m.from;
+ const sender=String(m.from||"").replace(/\D/g,"");
+ if(MODE==="private" && OWNER && sender!==OWNER)return;
+ if(!raw.startsWith(PREFIX))return;
  const a=raw.slice(PREFIX.length).trim().split(/\s+/),cmd=(a.shift()||"").toLowerCase(),arg=a.join(" ");
  if(cmd==="ping")return send(to,"🏓 Pong!\\n⏱️ "+runtime());
  if(cmd==="alive"||cmd==="status")return send(to,"🤖 "+BOT_NAME+"\\n🟢 Online\\n⏱️ "+runtime());
@@ -77,7 +81,7 @@ async function poll(){
 }
 const START_MESSAGE=`*_Roma!_*
 
-_Mode         :_ *Private*
+_Mode         :_ *${MODE[0].toUpperCase()+MODE.slice(1)}*
 _Language :_ *English*
 _Sudo_         _: *${OWNER ? "+"+OWNER : "Not configured"}*
 _Handlers_  _: *${PREFIX},*
