@@ -1,6 +1,8 @@
+#     ROMA MD
+
 I<div align="center">
 
-<img src="https://n.uguu.se/fBwHnDQg.jpg" width="100%" alt="ROMA MD">
+<img src="https://n.uguu.se/fBwHnDQg.jpg" width="90%" alt="ROMA MD">
 
 # ⚡ 𝐑𝐎𝐌𝐀 𝐌𝐃 ⚡
 
