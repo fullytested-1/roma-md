@@ -2,13 +2,13 @@ import "dotenv/config";
 import P from "pino";
 
 const SESSION_ID=process.env.SESSION_ID||"";
-const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"").replace(/\/$/,"");
+const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"https://modest-sacha-boyscro-50785a59.koyeb.app").replace(/\/$/,"");
 const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
 const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
 const log=P({level:process.env.LOG_LEVEL||"silent"});
 if(!/^ROMA~[A-Za-z0-9_-]{8,}$/.test(SESSION_ID)) throw new Error("Invalid ROMA session ID");
-if(!PAIR_WEB_URL) throw new Error("PAIR_WEB_URL is required (your deployed Pair-web URL)");
+
 
 const J="https://jerrycoder.oggyapi.workers.dev",N="https://api.nexray.eu.cc",E="https://eliteprotech-apis.zone.id";
 const started=Date.now();
