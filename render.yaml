@@ -1,0 +1,1 @@
+services:\n  - type: worker\n    name: roma-md\n    runtime: docker\n    dockerfilePath: ./Dockerfile\n    envVars:\n      - key: SESSION_ID\n        sync: false\n      - key: OWNER_NUMBER\n        sync: false\n      - key: PREFIX\n        value: "."\n      - key: BOT_NAME\n        value: "ROMA MD"\n      - key: LOG_LEVEL\n        value: "silent"\n
