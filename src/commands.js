@@ -1,15 +1,1 @@
-export const commandGroups = {
-  General: ["ping","menu","help","alive","owner","runtime"],
-  Downloader: ["ytv","yta","spotify","song","instagram","facebook","twitter","tiktok","lyrics","play"],
-  Group: ["add","remove","promote","demote","groupinfo","invite","revoke","tagall","welcome","goodbye","antilink","open","close","mute"],
-  Owner: ["broadcast","block","unblock","restart","eval","exec","setpp","setname","setbio"],
-  FunUtility: ["sticker","toimage","textsticker","translate","weather","wiki","image","qr","readqr","short"],
-  AI: ["ai","imagine"],
-  Safety: ["antidelete","viewonce","autoread","autotyping"]
-};
-
-export function menuText(prefix) {
-  return Object.entries(commandGroups).map(function(x) {
-    return "*" + x[0] + "*\n" + x[1].map(function(c) { return "• " + prefix + c; }).join("\n");
-  }).join("\n\n");
-}
+export function menuText(p){return "╭──〔 🤖 ROMA MD 〕──╮\n│ GENERAL\n│ • "+p+"ping\n│ • "+p+"alive\n│ • "+p+"menu\n│ • "+p+"runtime\n│ • "+p+"owner\n│\n│ DOWNLOAD\n│ • "+p+"fb <facebook url>\n│ • "+p+"twitter <x/twitter url>\n│ • "+p+"lyrics <song name>\n│\n│ AI\n│ • "+p+"ai <question>\n│ • "+p+"imagine <prompt>\n╰──────────────────╯"}
