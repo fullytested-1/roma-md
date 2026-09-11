@@ -75,5 +75,29 @@ async function poll(){
  }catch(e){log.error({err:e},"poll failed")}
  finally{busy=false}
 }
+const START_MESSAGE=`*_Roma!_*
+
+_Mode         :_ *Private*
+_Language :_ *English*
+_Sudo_         _: *${OWNER ? "+"+OWNER : "Not configured"}*
+_Handlers_  _: *${PREFIX},*
+
+╭─〔 ROMA MD 〕─╮
+│ 🟢 Bot Connected Successfully
+│ 🔐 Session ID authentication
+│ ⚡ Ready to use
+╰──────────────╯`;
+
+async function sendStartingMessage(){
+  if(!OWNER)return;
+  try{
+    await send(OWNER+"@s.whatsapp.net",START_MESSAGE);
+    console.log("[ROMA] Starting message sent to owner");
+  }catch(e){
+    log.error({err:e},"starting message failed");
+  }
+}
+
 console.log("[ROMA] Bot started with session "+SESSION_ID);
+setTimeout(sendStartingMessage,3000);
 setInterval(poll,2000);poll();
