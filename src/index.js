@@ -26,8 +26,8 @@ const urlOf=s=>(s.match(/https?:\/\/[^\s]+/i)||[])[0];
 
 async function handle(m){
  const raw=textOf(m).trim(),to=m.from;
- const sender=String(m.from||"").replace(/\D/g,"");
- if(MODE==="private") { const botJid=await getBotJid(); const botNumber=botJid.replace(/\D/g,""); const allowed=OWNER||botNumber; if(allowed && sender!==allowed)return; }
+ const sender=String(m.from||"").split("@")[0].split(":")[0].replace(/\D/g,"");
+ if(MODE==="private") { const botJid=await getBotJid(); const botNumber=botJid.split("@")[0].split(":")[0].replace(/\D/g,""); const allowed=OWNER||botNumber; if(allowed && sender!==allowed)return; }
  if(!raw.startsWith(PREFIX))return;
  const a=raw.slice(PREFIX.length).trim().split(/\s+/),cmd=(a.shift()||"").toLowerCase(),arg=a.join(" ");
  if(cmd==="ping")return send(to,"🏓 Pong!\\n⏱️ "+runtime());
