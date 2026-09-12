@@ -1,1 +1,0 @@
-export function menuText(p){return "╭──〔 🤖 ROMA MD 〕──╮\n│ GENERAL\n│ • "+p+"ping\n│ • "+p+"alive\n│ • "+p+"menu\n│ • "+p+"runtime\n│ • "+p+"owner\n│\n│ DOWNLOAD\n│ • "+p+"fb <facebook url>\n│ • "+p+"twitter <x/twitter url>\n│ • "+p+"lyrics <song name>\n│\n│ AI\n│ • "+p+"ai <question>\n│ • "+p+"imagine <prompt>\n╰──────────────────╯"}
