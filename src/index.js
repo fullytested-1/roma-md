@@ -95,14 +95,19 @@ _Handlers_  _: *${PREFIX},*
 ╰──────────────╯`;
 
 async function sendStartingMessage(){
-  try{
-    const botJid=await getBotJid();
-    const target=botJid || (OWNER ? OWNER+"@s.whatsapp.net" : "");
-    if(!target) return;
-    await send(target,START_MESSAGE);
-    console.log("[ROMA] Starting message sent");
-  }catch(e){
-    log.error({err:e},"starting message failed");
+  for(let attempt=1; attempt<=10; attempt++){
+    try{
+      const botJid=await getBotJid();
+      const target=botJid || (OWNER ? OWNER+"@s.whatsapp.net" : "");
+      if(target){
+        await send(target,START_MESSAGE);
+        console.log("[ROMA] Starting message sent");
+        return;
+      }
+    }catch(e){
+      log.error({err:e},"starting message failed");
+    }
+    await new Promise(r=>setTimeout(r,3000));
   }
 }
 
