@@ -1,13 +1,14 @@
 import "dotenv/config";
 import P from "pino";
 
-const SESSION_RAW=process.env.SESSION_ID||"";
-const SESSION_ID=(SESSION_RAW.match(/ROMA~[A-Za-z0-9_-]{8,}/)||[""])[0];
+const SESSION_RAW=String(process.env.SESSION_ID||"");
+// Pair Web sends only the opaque ROMA session ID. Keep whitespace/newlines tolerant.
+const SESSION_ID=(SESSION_RAW.match(/ROMA~[A-Za-z0-9_-]{8,}/)||[""])[0].trim();
 const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"https://modest-sacha-boyscro-50785a59.koyeb.app").replace(/\/$/,"");
 const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
 const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
-const getBotJid=async()=>{try{const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));return String(d?.userJid||"")}catch{return ""}};
+const getBotJid=async()=>{try{const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));return String(d?.userJid||d?.session?.userJid||"")}catch{return ""}};
 const MODE=(process.env.MODE||"private").toLowerCase()==="public"?"public":"private";
 const log=P({level:process.env.LOG_LEVEL||"silent"});
 if(!/^ROMA~[A-Za-z0-9_-]{8,}$/.test(SESSION_ID)) throw new Error("Invalid ROMA session ID");
@@ -75,9 +76,10 @@ let cursor=0, busy=false;
 async function poll(){
  if(busy)return; busy=true;
  try{
-  const d=await req(PAIR_WEB_URL+"/api/bot/messages/"+encodeURIComponent(SESSION_ID)+"?after="+cursor);
+  const d=await req(PAIR_WEB_URL+"/api/bot/messages/"+encodeURIComponent(SESSION_ID)+"?after="+encodeURIComponent(cursor));
   if(!d.success)throw new Error(d.error||"Pair-web rejected session");
-  for(const m of d.messages||[]){cursor=Math.max(cursor,Number(m.cursor)||cursor);try{await handle(m)}catch(e){log.error({err:e},"command failed")}}
+  for(const m of d.messages||[]){try{await handle(m)}catch(e){log.error({err:e},"command failed")}}
+  cursor=Math.max(cursor,Number(d.cursor)||cursor);
  }catch(e){log.error({err:e},"poll failed")}
  finally{busy=false}
 }
