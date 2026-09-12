@@ -1,5 +1,10 @@
 {
-  "name":"roma-md","version":"2.0.0","private":true,"type":"module","main":"src/index.js",
-  "scripts":{"start":"node src/index.js"},"engines":{"node":">=20"},
-  "dependencies":{"dotenv":"16.4.7","pino":"9.9.4"}
+  "name":"roma-md",
+  "version":"4.0.8",
+  "private":true,
+  "type":"module",
+  "main":"index.js",
+  "scripts":{"start":"node index.js"},
+  "engines":{"node":">=20"},
+  "dependencies":{"dotenv":"16.4.7"}
 }
