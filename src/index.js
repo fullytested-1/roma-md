@@ -9,7 +9,7 @@ const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
 const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
 const getBotJid=async()=>{try{const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));return String(d?.userJid||d?.session?.userJid||"")}catch{return ""}};
-const MODE=(process.env.MODE||"private").toLowerCase()==="public"?"public":"private";
+const MODE=(process.env.MODE||"public").toLowerCase()==="private"?"private":"public";
 const log=P({level:process.env.LOG_LEVEL||"silent"});
 if(!/^ROMA~[A-Za-z0-9_-]{8,}$/.test(SESSION_ID)) throw new Error("Invalid ROMA session ID");
 
@@ -77,7 +77,7 @@ let lastSessionState="";
 async function checkSessionState(){
  try{
   const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));
-  const connected=Boolean(d?.connected ?? d?.status==="connected" ?? d?.session?.connected);
+  const connected = d?.connected === true || d?.status === "connected" || d?.session?.connected === true;
   const state=connected?"CONNECTED":"DISCONNECTED";
   if(state!==lastSessionState){
    lastSessionState=state;
