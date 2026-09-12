@@ -73,6 +73,23 @@ async function handle(m){
 }
 
 let cursor=0, busy=false;
+let lastSessionState="";
+async function checkSessionState(){
+ try{
+  const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));
+  const connected=Boolean(d?.connected ?? d?.status==="connected" ?? d?.session?.connected);
+  const state=connected?"CONNECTED":"DISCONNECTED";
+  if(state!==lastSessionState){
+   lastSessionState=state;
+   console.log("[ROMA] Session "+state+" • "+SESSION_ID);
+  }
+ }catch(e){
+  if(lastSessionState!=="UNAVAILABLE"){
+   lastSessionState="UNAVAILABLE";
+   console.log("[ROMA] Session status unavailable • "+SESSION_ID);
+  }
+ }
+}
 async function poll(){
  if(busy)return; busy=true;
  try{
@@ -114,5 +131,9 @@ async function sendStartingMessage(){
 }
 
 console.log("[ROMA] Bot started with session "+SESSION_ID);
+console.log("[ROMA] Session status: checking...");
 setTimeout(sendStartingMessage,3000);
-setInterval(poll,2000);poll();
+setInterval(poll,2000);
+setInterval(checkSessionState,5000);
+poll();
+checkSessionState();
