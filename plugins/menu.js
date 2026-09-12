@@ -1,7 +1,7 @@
 export const commands=[{
   name:"menu",aliases:["help"],
   async run(ctx){
-    const c=ctx.config, p=c.prefix, user=ctx.senderNumber||"User";
+    const c=ctx.config,p=c.prefix,user=ctx.senderNumber||"User";
     const menu=`╭━━━〔 ${c.botName} 〕━━━···▸
 ┃╭──────────────···▸
 ✧│ *ᴏᴡɴᴇʀ :* ANSAD
@@ -9,61 +9,42 @@ export const commands=[{
 ✧│ *ᴘʟᴜɢɪɴs :* ${ctx.pluginCount}
 ✧│ *ᴅᴀᴛᴇ :* ${ctx.date}
 ✧│ *ᴛɪᴍᴇ :* ${ctx.time}
-✧│ *ᴜᴘᴛɪᴍᴇ :* ${ctx.uptime}
+✧│ *ᴜᴘᴛɪᴍᴇ :* ${ctx.uptime()}
 ✧│ *ᴠᴇʀsɪᴏɴ :* v4.0.8
 ┃╰──────────────···▸
 ╰━━━━━━━━━━━━━━━···▸
 
 ╭━━━━━━━━━━━━━━━···▸
-╽
-┃  ╭─────────────┅┄▻
-┃  │  *➻ GENERAL*
-┃  ╰┬────────────┅┄▻
-┃  ┌┤
+┃  *➻ GENERAL*
 ┃  │ ‣ ${p}ping
 ┃  │ ‣ ${p}alive
 ┃  │ ‣ ${p}runtime
 ┃  │ ‣ ${p}menu
-┃  ╰─────────────···▸
-┃  ╭─────────────┅┄▻
-┃  │  *➻ AI*
-┃  ╰┬────────────┅┄▻
-┃  ┌┤
-┃  │ ‣ ${p}ai
-┃  │ ‣ ${p}imagine
-┃  ╰─────────────···▸
-┃  ╭─────────────┅┄▻
-┃  │  *➻ DOWNLOAD*
-┃  ╰┬────────────┅┄▻
-┃  ┌┤
-┃  │ ‣ ${p}fb
-┃  │ ‣ ${p}twitter
-┃  │ ‣ ${p}tiktok
-┃  │ ‣ ${p}spotify
-┃  ╰─────────────···▸
-┃  ╭─────────────┅┄▻
-┃  │  *➻ GROUP*
-┃  ╰┬────────────┅┄▻
-┃  ┌┤
+┃  │ ‣ ${p}session
+┃
+┃  *➻ AI*
+┃  │ ‣ ${p}ai <question>
+┃
+┃  *➻ DOWNLOAD*
+┃  │ ‣ ${p}fb <link>
+┃  │ ‣ ${p}insta <link>
+┃  │ ‣ ${p}twitter <link>
+┃  │ ‣ ${p}spotify <link>
+┃  │ ‣ ${p}yt <link>
+┃  │ ‣ ${p}yta <link>
+┃  │ ‣ ${p}yts <query>
+┃
+┃  *➻ GROUP / SERVER*
 ┃  │ ‣ ${p}add
 ┃  │ ‣ ${p}kick
 ┃  │ ‣ ${p}promote
 ┃  │ ‣ ${p}demote
 ┃  │ ‣ ${p}tag
-┃  ╰─────────────···▸
-┃  ╭─────────────┅┄▻
-┃  │  *➻ SERVER*
-┃  ╰┬────────────┅┄▻
-┃  ┌┤
 ┃  │ ‣ ${p}mode
-┃  │ ‣ ${p}uptime
-┃  │ ‣ ${p}runtime
-┃  ╰─────────────···▸
-┃  ╭─────────────┅┄▻
-┃  │  *➻ SUPPORT*
-┃  ╰┬────────────┅┄▻
-┃  │ ‣ ${p}help
-┃  │ ‣ ${p}repo
+┃  │ ‣ ${p}owner
+┃
+┃  *➻ MUSIC*
+┃  │ ‣ ${p}lyrics <song>
 ┃  ╰─────────────···▸
 ╰━━━━━━━━━━━┈⊷
 made with 🤍`;
