@@ -5,12 +5,12 @@ const API=q=>"https://jerrycoder.oggyapi.workers.dev/ai/gpt?q="+encodeURICompone
 
 export const commands=[
   {
-    name:"command.ai",
+    name:"ai",
     aliases:[],
     async run(ctx){
       const q=String(ctx.arg||"").trim();
       if(!q)
-        return ctx.reply("❌ Question kodukkuka.\n\nExample: .command.ai Hii");
+        return ctx.reply("❌ Question kodukkuka.\n\nExample: .ai Hii");
 
       try{
         const data=await request(API(q));
@@ -18,7 +18,7 @@ export const commands=[
         if(!reply) throw new Error("API returned no reply");
         await sendMessage(ctx.message.from,reply);
       }catch(e){
-        console.error("[ROMA] command.ai error:",e.message);
+        console.error("[ROMA] ai error:",e.message);
         await ctx.reply("❌ AI reply failed. Pinne try cheyyuka.");
       }
     }
