@@ -7,6 +7,7 @@ const PAIR_WEB_URL=(process.env.PAIR_WEB_URL||"https://modest-sacha-boyscro-5078
 const PREFIX=process.env.PREFIX||".";
 const BOT_NAME=process.env.BOT_NAME||"ROMA MD";
 const OWNER=(process.env.OWNER_NUMBER||"").replace(/\D/g,"");
+const getBotJid=async()=>{try{const d=await req(PAIR_WEB_URL+"/api/session/"+encodeURIComponent(SESSION_ID));return String(d?.userJid||"")}catch{return ""}};
 const MODE=(process.env.MODE||"private").toLowerCase()==="public"?"public":"private";
 const log=P({level:process.env.LOG_LEVEL||"silent"});
 if(!/^ROMA~[A-Za-z0-9_-]{8,}$/.test(SESSION_ID)) throw new Error("Invalid ROMA session ID");
@@ -26,7 +27,7 @@ const urlOf=s=>(s.match(/https?:\/\/[^\s]+/i)||[])[0];
 async function handle(m){
  const raw=textOf(m).trim(),to=m.from;
  const sender=String(m.from||"").replace(/\D/g,"");
- if(MODE==="private" && OWNER && sender!==OWNER)return;
+ if(MODE==="private") { const botJid=await getBotJid(); const botNumber=botJid.replace(/\D/g,""); const allowed=OWNER||botNumber; if(allowed && sender!==allowed)return; }
  if(!raw.startsWith(PREFIX))return;
  const a=raw.slice(PREFIX.length).trim().split(/\s+/),cmd=(a.shift()||"").toLowerCase(),arg=a.join(" ");
  if(cmd==="ping")return send(to,"🏓 Pong!\\n⏱️ "+runtime());
@@ -95,8 +96,9 @@ _Handlers_  _: *${PREFIX},*
 
 async function sendStartingMessage(){
   try{
-    const target=OWNER ? OWNER+"@s.whatsapp.net" : (process.env.BOT_NUMBER||"").replace(/\D/g,"")+"@s.whatsapp.net";
-    if(!target || target==="@s.whatsapp.net") return;
+    const botJid=await getBotJid();
+    const target=botJid || (OWNER ? OWNER+"@s.whatsapp.net" : "");
+    if(!target) return;
     await send(target,START_MESSAGE);
     console.log("[ROMA] Starting message sent");
   }catch(e){
